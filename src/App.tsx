@@ -68,6 +68,11 @@ function App() {
     setDialogues(dialogues.filter((_, i) => i !== index));
   }
 
+  function importJson(text: string) {
+    console.log(text)
+    setDialogues(JSON.parse(text));
+  }
+
   return (
     <>
       <div className="container mx-auto py-6 max-w-4xl">
@@ -77,7 +82,30 @@ function App() {
           </CardHeader>
           <CardContent>
             <div className="flex gap-4 mb-6 flex-wrap justify-center">
-              <ButtonIcon icon={<Import />} text="Import" onClick={() => { }} />
+              <div>
+                <input
+                  type="file"
+                  onChange={(e) => {
+                    const file = e.target.files![0];
+                    if (file) {
+                      const reader = new FileReader();
+
+                      reader.onload = (event) => {
+                        importJson(event.target!.result?.toString()!);
+                      };
+
+                      reader.readAsText(file);
+                    }
+                  }}
+                  accept="application/json"
+                  id="file-input"
+                  style={{ display: "none" }}
+                />
+                <ButtonIcon
+                  icon={<Import />} text="Import"
+                  onClick={() => document.getElementById("file-input")?.click()}
+                />
+              </div>
               <ButtonIcon icon={<Save />} text="Export" onClick={() => { }} />
             </div>
 
@@ -100,7 +128,7 @@ function App() {
                     const dialogue = dialogues[index];
                     return dialogue[field];
                   }}
-                  
+
                 />)}
             </div>
             <div className="flex justify-center">
