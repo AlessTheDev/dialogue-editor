@@ -73,6 +73,18 @@ function App() {
     setDialogues(JSON.parse(text));
   }
 
+  function exportJson(){
+    const blob = new Blob([JSON.stringify(dialogues, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "data.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <>
       <div className="container mx-auto py-6 max-w-4xl">
@@ -106,7 +118,7 @@ function App() {
                   onClick={() => document.getElementById("file-input")?.click()}
                 />
               </div>
-              <ButtonIcon icon={<Save />} text="Export" onClick={() => { }} />
+              <ButtonIcon icon={<Save />} text="Export" onClick={exportJson} />
             </div>
 
             <div className="space-y">
